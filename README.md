@@ -3,16 +3,17 @@
 ## Overview
 
 This project is a Java-based automation tool for interacting with hh.ru.
-It uses Playwright to control a browser and simulate user actions.
 
-At the current stage, the project successfully launches the hh.ru website in automated mode.
+It uses Playwright to automate browser actions and now includes a login automation flow with environment-based credentials.
 
 ---
 
 ## Current Features
 
 * Launches hh.ru using Playwright automation
-* Basic project structure for future expansion
+* Automated login flow (email + password)
+* Environment-based configuration via `.env`
+* Structured helper methods for automation steps
 
 ---
 
@@ -28,11 +29,11 @@ At the current stage, the project successfully launches the hh.ru website in aut
 
 ## Tech Stack
 
-* Java
-* Playwright (Java)
+* Java 21
 * Maven
-* PostgreSQL (planned)
-* RabbitMQ (planned)
+* Playwright (Java)
+* dotenv-java (environment variables)
+* JUnit 4.13.2 (testing)
 
 ---
 
@@ -42,7 +43,7 @@ At the current stage, the project successfully launches the hh.ru website in aut
 
 Make sure you have installed:
 
-* Java 17+
+* Java 21+
 * Maven 3.8+
 
 ---
@@ -50,8 +51,19 @@ Make sure you have installed:
 ### Clone the Repository
 
 ```bash
-git clone https://github.com/<your-username>/hh-automation.git
+git clone https://github.com/avtomatik/hh-automation.git
 cd hh-automation
+```
+
+---
+
+### Configure Environment Variables
+
+Create a `.env` file in the project root:
+
+```env
+HH_EMAIL=your_email@example.com
+HH_PASSWORD=your_password
 ```
 
 ---
@@ -66,8 +78,6 @@ mvn clean install
 
 ### Install Playwright Browsers
 
-Playwright requires browser binaries. Install them with:
-
 ```bash
 mvn exec:java -e -Dexec.mainClass=com.microsoft.playwright.CLI -Dexec.args="install"
 ```
@@ -77,10 +87,10 @@ mvn exec:java -e -Dexec.mainClass=com.microsoft.playwright.CLI -Dexec.args="inst
 ### Run the Project
 
 ```bash
-mvn compile exec:java -Dexec.mainClass="com.example.hhautomation.Main"
+mvn compile exec:java -Dexec.mainClass="com.example.hhautomation.LoginExample"
 ```
 
-This will launch a browser and open hh.ru in automated mode.
+This will launch a browser, navigate to hh.ru login page, and perform an automated login using credentials from `.env`.
 
 ---
 
@@ -98,8 +108,10 @@ src/
 
 ## Notes
 
-* The project is in an early stage and focuses on learning and experimentation.
-* Future updates will expand automation scenarios and add backend components.
+* The project now uses environment variables for credentials via `dotenv-java`
+* Login flow is split into reusable methods for better maintainability
+* Java version has been upgraded to 21
+* This is still an early-stage learning project focused on automation and backend architecture
 
 ---
 
@@ -107,9 +119,9 @@ src/
 
 This project is built as a hands-on way to learn Java through:
 
-* Browser automation
-* Web scraping
-* Backend architecture
-* Scalable system design
+* Browser automation with Playwright
+* Secure configuration management (.env)
+* Web scraping and automation flows
+* Backend architecture and scalable design patterns
 
 ---

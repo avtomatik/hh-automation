@@ -1,0 +1,91 @@
+package com.example.hhautomation;
+
+import com.microsoft.playwright.Browser;
+import com.microsoft.playwright.BrowserContext;
+import com.microsoft.playwright.BrowserType;
+import com.microsoft.playwright.Locator;
+import com.microsoft.playwright.Page;
+import com.microsoft.playwright.Playwright;
+import com.microsoft.playwright.options.AriaRole;
+import com.microsoft.playwright.options.WaitUntilState;
+
+import io.github.cdimascio.dotenv.Dotenv;
+
+public class LoginExample {
+
+    static final String LOGIN_URL = "https://hh.ru/account/login?role=applicant";
+
+    public static void main(String[] args) {
+
+        Dotenv dotenv = Dotenv.load();
+
+        String email = dotenv.get("HH_EMAIL");
+        String password = dotenv.get("HH_PASSWORD");
+
+        if (email == null || password == null) {
+            System.out.println("Missing HH_EMAIL / HH_PASSWORD in .env.");
+            return;
+        }
+
+        try (Playwright playwright = Playwright.create()) {
+
+            Browser browser = playwright.chromium().launch(new BrowserType.LaunchOptions()
+                    .setHeadless(false));
+
+            BrowserContext context = browser.newContext();
+
+            Page page = context.newPage();
+
+            page.setDefaultTimeout(60000);
+            page.setDefaultNavigationTimeout(60000);
+
+            navigateToLogin(page);
+
+            openEmailLogin(page);
+
+            enterEmail(email, page);
+
+            switchToPasswordLogin(page);
+
+            enterPassword(password, page);
+
+            submitLogin(page);
+
+            System.out.println("Login flow completed (check manually if successfull)");
+
+            page.waitForTimeout(5000);
+
+            browser.close();
+        }
+    }
+
+    static void navigateToLogin(Page page) {
+        page.navigate(LOGIN_URL,
+                new Page.NavigateOptions().setWaitUntil(WaitUntilState.DOMCONTENTLOADED));
+    }
+
+    static void openEmailLogin(Page page) {
+        Locator loginButton = page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Войти"));
+
+        loginButton.waitFor(new Locator.WaitForOptions().setTimeout(10000));
+        loginButton.click();
+
+        page.getByText("Почта").first().click();
+    }
+
+    private static void enterEmail(String email, Page page) {
+        page.getByRole(AriaRole.TEXTBOX).first().fill(email);
+    }
+
+    private static void switchToPasswordLogin(Page page) {
+        page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Войти с паролем")).click();
+    }
+
+    private static void enterPassword(String password, Page page) {
+        page.getByRole(AriaRole.TEXTBOX).fill(password);
+    }
+
+    private static void submitLogin(Page page) {
+        page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Войти").setExact(true)).click();
+    }
+}
