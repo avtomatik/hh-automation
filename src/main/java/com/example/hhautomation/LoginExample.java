@@ -19,10 +19,10 @@ public class LoginExample {
 
         Dotenv dotenv = Dotenv.load();
 
-        String email = dotenv.get("HH_EMAIL");
-        String password = dotenv.get("HH_PASSWORD");
+        String EMAIL = dotenv.get("HH_EMAIL");
+        String PASSWORD = dotenv.get("HH_PASSWORD");
 
-        if (email == null || password == null) {
+        if (EMAIL == null || PASSWORD == null) {
             System.out.println("Missing HH_EMAIL / HH_PASSWORD in .env.");
             return;
         }
@@ -43,11 +43,11 @@ public class LoginExample {
 
             openEmailLogin(page);
 
-            enterEmail(email, page);
+            enterEmail(page, EMAIL);
 
             switchToPasswordLogin(page);
 
-            enterPassword(password, page);
+            enterPassword(page, PASSWORD);
 
             submitLogin(page);
 
@@ -59,12 +59,12 @@ public class LoginExample {
         }
     }
 
-    static void navigateToLogin(Page page) {
+    private static void navigateToLogin(Page page) {
         page.navigate(LOGIN_URL,
                 new Page.NavigateOptions().setWaitUntil(WaitUntilState.DOMCONTENTLOADED));
     }
 
-    static void openEmailLogin(Page page) {
+    private static void openEmailLogin(Page page) {
         Locator loginButton = page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Войти"));
 
         loginButton.waitFor(new Locator.WaitForOptions().setTimeout(10000));
@@ -73,7 +73,7 @@ public class LoginExample {
         page.getByText("Почта").first().click();
     }
 
-    private static void enterEmail(String email, Page page) {
+    private static void enterEmail(Page page, String email) {
         page.getByRole(AriaRole.TEXTBOX).first().fill(email);
     }
 
@@ -81,7 +81,7 @@ public class LoginExample {
         page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Войти с паролем")).click();
     }
 
-    private static void enterPassword(String password, Page page) {
+    private static void enterPassword(Page page, String password) {
         page.getByRole(AriaRole.TEXTBOX).fill(password);
     }
 
