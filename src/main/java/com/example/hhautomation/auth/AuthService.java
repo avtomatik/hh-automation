@@ -46,8 +46,6 @@ public class AuthService {
 
         page.navigate(Config.LOGIN_URL, new Page.NavigateOptions().setWaitUntil(WaitUntilState.DOMCONTENTLOADED));
 
-        // page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Я ищу работу")).click();
-
         page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Войти")).click();
 
         page.getByText("Почта").first().click();
